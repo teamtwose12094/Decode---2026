@@ -3,8 +3,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="DriverControl", group="Linear OpMode")
+@TeleOp(name="DriverControl", group="Linear OpMode")
 public class DriverControl extends LinearOpMode {
 
     // Declare motors and servos
@@ -21,6 +22,7 @@ public class DriverControl extends LinearOpMode {
     double driveSpeedMultiplier = config.driveSpeedMultiplier;
     double pivotSpeedMultiplier = config.pivotSpeedMultiplier;
 
+    //For Slow Mode
     private boolean isSlowMode = false;
     private boolean lastRightBumperState = false;
 
@@ -98,7 +100,7 @@ public class DriverControl extends LinearOpMode {
         double max = 0.0;
 
         //Telemetry
-        telemetry.addData("wheel", frontLeftDrive.getCurrentPosition());
+        telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
 
 
         telemetry.addData("Player 1 Controls","");
