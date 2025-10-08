@@ -29,7 +29,7 @@ public class DriverControl extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
         //Hardware Initialized
         frontLeftDrive = hardwareMap.get(DcMotor.class,"frontLeftDrive");
@@ -54,6 +54,11 @@ public class DriverControl extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        //Driving
+        //Use left joystick to go forward & strafe, right joystick to turn/rotate
+        double axial = -gamepad1.left_stick_y * driveSpeedMultiplier;  // Note: pushing stick forward gives negative value
+        double lateral = gamepad1.left_stick_x * driveSpeedMultiplier;
+        double yaw = gamepad1.right_stick_x * pivotSpeedMultiplier;
 
         //Slow Mode
 
@@ -78,11 +83,7 @@ public class DriverControl extends LinearOpMode {
 
 
 
-        //Driving
-        //Use left joystick to go forward & strafe, right joystick to turn/rotate
-        double axial = -gamepad1.left_stick_y * driveSpeedMultiplier;  // Note: pushing stick forward gives negative value
-        double lateral = gamepad1.left_stick_x * driveSpeedMultiplier;
-        double yaw = gamepad1.right_stick_x * pivotSpeedMultiplier;
+
 
         //Launcher
        double triggerValue = gamepad2.left_trigger;
