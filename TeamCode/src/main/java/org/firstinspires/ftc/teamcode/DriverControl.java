@@ -54,66 +54,69 @@ public class DriverControl extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //Driving
-        //Use left joystick to go forward & strafe, right joystick to turn/rotate
-        double axial = -gamepad1.left_stick_y * driveSpeedMultiplier;  // Note: pushing stick forward gives negative value
-        double lateral = gamepad1.left_stick_x * driveSpeedMultiplier;
-        double yaw = gamepad1.right_stick_x * pivotSpeedMultiplier;
+        while (opModeIsActive()) {
 
-        //Slow Mode
+            //Driving
+            //Use left joystick to go forward & strafe, right joystick to turn/rotate
+            double axial = -gamepad1.left_stick_y * driveSpeedMultiplier;  // Note: pushing stick forward gives negative value
+            double lateral = gamepad1.left_stick_x * driveSpeedMultiplier;
+            double yaw = gamepad1.right_stick_x * pivotSpeedMultiplier;
 
-        boolean currentRightBumperState = gamepad1.right_bumper;
+            //Slow Mode
+
+            boolean currentRightBumperState = gamepad1.right_bumper;
 
 
-        if (currentRightBumperState && !lastRightBumperState) {
-            // Toggle the slow mode state
-            isSlowMode = !isSlowMode;
+            if (currentRightBumperState && !lastRightBumperState) {
+                // Toggle the slow mode state
+                isSlowMode = !isSlowMode;
+            }
+
+
+            if (isSlowMode) {
+                // SLOW MODE ACTIVE
+                driveSpeedMultiplier = config.slowDriveSpeedMultiplier;
+                pivotSpeedMultiplier = config.slowPivotSpeedMultiplier;
+            } else {
+                // NORMAL MODE ACTIVE
+                driveSpeedMultiplier = config.driveSpeedMultiplier;
+                pivotSpeedMultiplier = config.pivotSpeedMultiplier;
+            }
+
+
+            //Launcher
+            double triggerValue = gamepad2.left_trigger;
+            if (triggerValue > 0.1) {
+                // If the trigger is fully pressed (1.0), the motor runs at full power.
+                Launcher.setPower(triggerValue);
+                telemetry.addData("Launch Motor", "Running @ " + triggerValue);
+            } else {
+                // If the trigger is released (value <= 0.1), stop the motor.
+                Launcher.setPower(0.0);
+                telemetry.addData("Launch Motor", "Stopped");
+            }
+
+
+            double max = 0.0;
+
+            //Telemetry
+            telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
+
+
+            telemetry.addData("Player 1 Controls", "");
+            telemetry.addData("Right Bumper", "Slow Mode");
+            telemetry.addData("Left Stick Up", "Drive Forwards");
+            telemetry.addData("Left Stick Down", "Drive Backwards");
+            telemetry.addData("Left Stick Left", "Strafe Left");
+            telemetry.addData("Left Stick Right", "Strafe Right");
+            telemetry.addData("Right Stick Left", "Turn Left");
+            telemetry.addData("Right Stick Right", "Turn Right");
+
+            telemetry.addData("Player 2 Controls", "");
+            telemetry.addData("Left Trigger", "Launch Artifacts");
+
+        }
         }
 
 
-        if (isSlowMode) {
-            // SLOW MODE ACTIVE
-            driveSpeedMultiplier = config.slowDriveSpeedMultiplier;
-            pivotSpeedMultiplier = config.slowPivotSpeedMultiplier;
-        } else {
-            // NORMAL MODE ACTIVE
-            driveSpeedMultiplier = config.driveSpeedMultiplier;
-            pivotSpeedMultiplier = config.pivotSpeedMultiplier;
-        }
-
-
-
-
-
-        //Launcher
-       double triggerValue = gamepad2.left_trigger;
-       if (triggerValue > 0.1) {
-           // If the trigger is fully pressed (1.0), the motor runs at full power.
-           Launcher.setPower(triggerValue);
-           telemetry.addData("Launch Motor", "Running @ " + triggerValue);
-       } else {
-           // If the trigger is released (value <= 0.1), stop the motor.
-           Launcher.setPower(0.0);
-           telemetry.addData("Launch Motor", "Stopped");
-       }
-
-
-        double max = 0.0;
-
-        //Telemetry
-        telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
-
-
-        telemetry.addData("Player 1 Controls","");
-        telemetry.addData("Right Bumper", "Slow Mode");
-        telemetry.addData("Left Stick Up", "Drive Forwards");
-        telemetry.addData("Left Stick Down", "Drive Backwards");
-        telemetry.addData("Left Stick Left", "Strafe Left");
-        telemetry.addData("Left Stick Right", "Strafe Right");
-        telemetry.addData("Right Stick Left", "Turn Left");
-        telemetry.addData("Right Stick Right", "Turn Right");
-
-        telemetry.addData("Player 2 Controls","");
-        telemetry.addData("Left Trigger", "Launch Artifacts");
-    }
 }
