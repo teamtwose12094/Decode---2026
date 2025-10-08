@@ -5,6 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+/*
+Connect to roboto  wifi
+open comamd prtompt and type "adb connect 192.168.43.1"
+ */
+
 @TeleOp(name="DriverControl", group="Linear OpMode")
 public class DriverControl extends LinearOpMode {
 
@@ -45,8 +50,8 @@ public class DriverControl extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
-        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
-        frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
+        backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
+        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
         backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
 
         Launcher.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
@@ -57,12 +62,43 @@ public class DriverControl extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Driving
-            //Use left joystick to go forward & strafe, right joystick to turn/rotate
+
+
+            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepad1.left_stick_y * driveSpeedMultiplier;  // Note: pushing stick forward gives negative value
             double lateral = gamepad1.left_stick_x * driveSpeedMultiplier;
             double yaw = gamepad1.right_stick_x * pivotSpeedMultiplier;
 
-            //Slow Mode
+            // Combine the joystick requests for each axis-motion to determine each wheel's power.
+            // Set up a variable for each drive wheel to save the power level for telemetry.
+
+            // Slow mode
+
+            double frontLeftPower = (axial + lateral + yaw);
+            double frontRightPower = axial - lateral - yaw;
+            double backLeftPower = axial - lateral + yaw;
+            double backRightPower = axial + lateral - yaw;
+
+            double max = 0.0;
+            // Normalize the values so no wheel power exceeds 100%
+            // This ensures that the robot maintains the desired motion.
+
+            max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
+            max = Math.max(max, Math.abs(backLeftPower));
+            max = Math.max(max, Math.abs(backRightPower));
+
+            if (max > 1.0) {
+                frontLeftPower /= max;
+                frontRightPower /= max;
+                backLeftPower /= max;
+                backRightPower /= max;
+            }
+            backLeftDrive.setPower(backLeftPower);
+            frontLeftDrive.setPower(frontLeftPower);
+            backRightDrive.setPower(backRightPower);
+            frontRightDrive.setPower(frontRightPower);
+
+            /*Slow Mode
 
             boolean currentRightBumperState = gamepad1.right_bumper;
 
@@ -82,7 +118,7 @@ public class DriverControl extends LinearOpMode {
                 driveSpeedMultiplier = config.driveSpeedMultiplier;
                 pivotSpeedMultiplier = config.pivotSpeedMultiplier;
             }
-
+ */
 
             //Launcher
             double triggerValue = gamepad2.left_trigger;
@@ -97,7 +133,7 @@ public class DriverControl extends LinearOpMode {
             }
 
 
-            double max = 0.0;
+            max = 0.0;
 
             //Telemetry
             telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
@@ -115,6 +151,7 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Player 2 Controls", "");
             telemetry.addData("Left Trigger", "Launch Artifacts");
 
+            telemetry.update();
         }
         }
 
