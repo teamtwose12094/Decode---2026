@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name = "AprilTagsTest",group = "TeleOp")
 public class AprilTagsTest extends LinearOpMode {
 
-    final double DESIRED_DISTANCE = 6.0; // this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 6.0; // this is how close th
+    // e camera should get to the target (inches)
 
 
     @Override

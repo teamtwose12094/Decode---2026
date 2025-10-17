@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 /*
 Connect to roboto  wifi
-open comamd prtompt and type "adb connect 192.168.43.1"
+open command prompt and type "adb connect 192.168.43.1"
  */
 
 @TeleOp(name="DriverControl", group="Linear OpMode")
@@ -20,7 +24,8 @@ public class DriverControl extends LinearOpMode {
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
     private DcMotor Launcher = null;
-
+    private DcMotor intake = null;
+    private Servo Lever = null;
     Config config = new Config();
 
     //Drive Motor Parameters
@@ -30,6 +35,7 @@ public class DriverControl extends LinearOpMode {
     //For Slow Mode
     private boolean isSlowMode = false;
     private boolean lastRightBumperState = false;
+
 
 
 
@@ -43,18 +49,24 @@ public class DriverControl extends LinearOpMode {
         backRightDrive = hardwareMap.get(DcMotor.class,"backRightDrive");
 
         Launcher = hardwareMap.get(DcMotor.class,"Launcher");
+        intake = hardwareMap.get(DcMotor.class,"intake");
+        Lever = hardwareMap.get(Servo.class,"Lever");
+
 
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
         frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
-        backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
+        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
         frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
         backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
 
-        Launcher.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
+        Launcher.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        Lever.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
         runtime.reset();
@@ -98,7 +110,7 @@ public class DriverControl extends LinearOpMode {
             backRightDrive.setPower(backRightPower);
             frontRightDrive.setPower(frontRightPower);
 
-            /*Slow Mode
+            //Slow Mode
 
             boolean currentRightBumperState = gamepad1.right_bumper;
 
@@ -118,26 +130,43 @@ public class DriverControl extends LinearOpMode {
                 driveSpeedMultiplier = config.driveSpeedMultiplier;
                 pivotSpeedMultiplier = config.pivotSpeedMultiplier;
             }
- */
+
 
             //Launcher
-            double triggerValue = gamepad2.left_trigger;
-            if (triggerValue > 0.1) {
+            double LeftTriggerValue = gamepad2.left_trigger;
+            if (LeftTriggerValue > 0.1) {
                 // If the trigger is fully pressed (1.0), the motor runs at full power.
-                Launcher.setPower(triggerValue);
-                telemetry.addData("Launch Motor", "Running @ " + triggerValue);
+                Launcher.setPower(0.65);
+                telemetry.addData("Launch Motor", "Running @ " + LeftTriggerValue);
             } else {
                 // If the trigger is released (value <= 0.1), stop the motor.
                 Launcher.setPower(0.0);
                 telemetry.addData("Launch Motor", "Stopped");
             }
 
+            //Intake
 
-            max = 0.0;
+            double RightTriggerValue = gamepad2.right_trigger;
+            if (RightTriggerValue > 0.1) {
+                intake.setPower(RightTriggerValue);
+                telemetry.addData("Intake Motor","Running @" + RightTriggerValue);
+            } else {
+                intake.setPower(0.0);
+                telemetry.addData("Intake Motor","Stopped");
+            }
+
+            //Lever
+            if (gamepad2.dpad_left) {
+                Lever.setPosition(0.5);
+            }
+
+            if (gamepad2.dpad_right) {
+                Lever.setPosition(0.95);
+            }
+
 
             //Telemetry
             telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
-
 
             telemetry.addData("Player 1 Controls", "");
             telemetry.addData("Right Bumper", "Slow Mode");
@@ -147,9 +176,12 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Left Stick Right", "Strafe Right");
             telemetry.addData("Right Stick Left", "Turn Left");
             telemetry.addData("Right Stick Right", "Turn Right");
-
+            telemetry.addData("", "");
             telemetry.addData("Player 2 Controls", "");
             telemetry.addData("Left Trigger", "Launch Artifacts");
+            telemetry.addData("Right Trigger", "Intake");
+            telemetry.addData("D-Pad Left", "Start Lever");
+            telemetry.addData("D-Pad Right", "Stop Lever");
 
             telemetry.update();
         }
