@@ -3,6 +3,7 @@ import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -25,7 +26,8 @@ public class DriverControl extends LinearOpMode {
     private DcMotor backRightDrive = null;
     private DcMotor Launcher = null;
     private DcMotor intake = null;
-    private Servo Lever = null;
+    private Servo PushyThing = null;
+    //private Servo Lever = null;
     Config config = new Config();
 
     //Drive Motor Parameters
@@ -35,6 +37,15 @@ public class DriverControl extends LinearOpMode {
     //For Slow Mode
     private boolean isSlowMode = false;
     private boolean lastRightBumperState = false;
+    Gamepad previousGamepad2 = new Gamepad();
+
+    // Tracks the current state (true = out/1, false = in/0)
+    private boolean pushyThingIsOut = false;
+
+    // Tracks the state of the button from the previous loop iteration
+    private boolean wasButtonPressed = false;
+
+    private int direction = 0;
 
 
 
@@ -50,7 +61,8 @@ public class DriverControl extends LinearOpMode {
 
         Launcher = hardwareMap.get(DcMotor.class,"Launcher");
         intake = hardwareMap.get(DcMotor.class,"intake");
-        Lever = hardwareMap.get(Servo.class,"Lever");
+        //Lever = hardwareMap.get(Servo.class,"Lever");
+        PushyThing = hardwareMap.get(Servo.class, "PushyThing");
 
 
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -66,7 +78,8 @@ public class DriverControl extends LinearOpMode {
 
         Launcher.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        Lever.setDirection(Servo.Direction.REVERSE);
+        //Lever.setDirection(Servo.Direction.REVERSE);
+
 
         waitForStart();
         runtime.reset();
@@ -136,7 +149,7 @@ public class DriverControl extends LinearOpMode {
             double LeftTriggerValue = gamepad2.left_trigger;
             if (LeftTriggerValue > 0.1) {
                 // If the trigger is fully pressed (1.0), the motor runs at full power.
-                Launcher.setPower(0.65);
+                Launcher.setPower(0.57);
                 telemetry.addData("Launch Motor", "Running @ " + LeftTriggerValue);
             } else {
                 // If the trigger is released (value <= 0.1), stop the motor.
@@ -156,17 +169,42 @@ public class DriverControl extends LinearOpMode {
             }
 
             //Lever
-            if (gamepad2.dpad_left) {
+            /*if (gamepad2.dpad_left) {
                 Lever.setPosition(0.5);
             }
 
             if (gamepad2.dpad_right) {
                 Lever.setPosition(0.95);
             }
+            */
+
+            //PushyThing
+
+            if (gamepad2.a) {
+                direction++;
+                }
+
+            if (gamepad2.b) {
+                direction = 0;
+            }
+
+
+            if (direction > 0) {
+                if (direction % 2 == 0) {
+                    PushyThing.setPosition(1.0);
+
+                } else if (direction % 2 != 0) {
+                    PushyThing.setPosition(0.0);
+                }
+            }
+
+
+
 
 
             //Telemetry
             telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
+            telemetry.addData("Servo", PushyThing.getPosition());
 
             telemetry.addData("Player 1 Controls", "");
             telemetry.addData("Right Bumper", "Slow Mode");
@@ -182,7 +220,8 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Right Trigger", "Intake");
             telemetry.addData("D-Pad Left", "Start Lever");
             telemetry.addData("D-Pad Right", "Stop Lever");
-
+            telemetry.addData("A Button", "Turn On Pushy Thing");
+            telemetry.addData("B Button", "Turn Off Pushy Thing");
             telemetry.update();
         }
         }
