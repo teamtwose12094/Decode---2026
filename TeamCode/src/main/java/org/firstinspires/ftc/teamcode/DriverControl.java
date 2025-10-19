@@ -37,7 +37,6 @@ public class DriverControl extends LinearOpMode {
     //For Slow Mode
     private boolean isSlowMode = false;
     private boolean lastRightBumperState = false;
-    Gamepad previousGamepad2 = new Gamepad();
 
     // Tracks the current state (true = out/1, false = in/0)
     private boolean pushyThingIsOut = false;
@@ -149,7 +148,7 @@ public class DriverControl extends LinearOpMode {
             double LeftTriggerValue = gamepad2.left_trigger;
             if (LeftTriggerValue > 0.1) {
                 // If the trigger is fully pressed (1.0), the motor runs at full power.
-                Launcher.setPower(0.57);
+                Launcher.setPower(0.75);
                 telemetry.addData("Launch Motor", "Running @ " + LeftTriggerValue);
             } else {
                 // If the trigger is released (value <= 0.1), stop the motor.
@@ -188,17 +187,19 @@ public class DriverControl extends LinearOpMode {
                 direction = 0;
             }
 
-
             if (direction > 0) {
+                // If direction is > 0, set the servo to one of the two end positions (1.0 or 0.0)
                 if (direction % 2 == 0) {
-                    PushyThing.setPosition(1.0);
+                    PushyThing.setPosition(1.0); // E.g., Move one way
 
-                } else if (direction % 2 != 0) {
-                    PushyThing.setPosition(0.0);
+                } else { // direction % 2 != 0
+
+                    PushyThing.setPosition(0.5); // Set the servo position to the middle value
                 }
+            } else {
+                // This block executes ONLY when direction is 0 (set by gamepad2.b)
+                PushyThing.setPosition(0.0); // E.g., Move the other way
             }
-
-
 
 
 
@@ -220,8 +221,8 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Right Trigger", "Intake");
             telemetry.addData("D-Pad Left", "Start Lever");
             telemetry.addData("D-Pad Right", "Stop Lever");
-            telemetry.addData("A Button", "Turn On Pushy Thing");
-            telemetry.addData("B Button", "Turn Off Pushy Thing");
+            telemetry.addData("X Button", "Turn On Pushy Thing");
+            telemetry.addData("O Button", "Turn Off Pushy Thing");
             telemetry.update();
         }
         }
