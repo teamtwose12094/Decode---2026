@@ -3,10 +3,13 @@ import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -27,7 +30,9 @@ public class DriverControl extends LinearOpMode {
     private DcMotor Launcher = null;
     private DcMotor intake = null;
     private Servo PushyThing = null;
-    //private Servo Lever = null;
+    private ColorSensor colorSensor;
+
+
     Config config = new Config();
 
     //Drive Motor Parameters
@@ -37,6 +42,8 @@ public class DriverControl extends LinearOpMode {
     //For Slow Mode
     private boolean isSlowMode = false;
     private boolean lastRightBumperState = false;
+    private ColorSensor ColorSensor;
+    private DistanceSensor distanceSensor;
 
     // Tracks the current state (true = out/1, false = in/0)
     private boolean pushyThingIsOut = false;
@@ -60,8 +67,8 @@ public class DriverControl extends LinearOpMode {
 
         Launcher = hardwareMap.get(DcMotor.class,"Launcher");
         intake = hardwareMap.get(DcMotor.class,"intake");
-        //Lever = hardwareMap.get(Servo.class,"Lever");
         PushyThing = hardwareMap.get(Servo.class, "PushyThing");
+        ColorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
 
 
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -77,7 +84,8 @@ public class DriverControl extends LinearOpMode {
 
         Launcher.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        //Lever.setDirection(Servo.Direction.REVERSE);
+
+
 
 
         waitForStart();
@@ -156,6 +164,9 @@ public class DriverControl extends LinearOpMode {
                 telemetry.addData("Launch Motor", "Stopped");
             }
 
+
+
+
             //Intake
 
             double RightTriggerValue = gamepad2.right_trigger;
@@ -201,11 +212,39 @@ public class DriverControl extends LinearOpMode {
                 PushyThing.setPosition(0.0); // E.g., Move the other way
             }
 
+            //Color Sensor
+
+
+            /*String detectedColor = "NONE";
+            int red = colorSensor.red();
+            int green = colorSensor.green();
+            int blue = colorSensor.blue();
+
+           
+
+            // Simple GREEN Detection: Green is high, and much higher than Red and Blue
+            if (green > 100 && green > (red * 2) && green > (blue * 2)) {
+                detectedColor = "GREEN";
+                telemetry.addData("Colour Detected", "Green");
+            }
+            // Simple PURPLE Detection: Red and Blue are high and balanced, Green is low
+            else if (red > 100 && blue > 100 && (red + blue) > (green * 2)) {
+                detectedColor = "PURPLE";
+                telemetry.addData("Colour Detected", "Purple");
+            }
+
+
+             */
+
+            //Velocity
+
 
 
             //Telemetry
             telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
             telemetry.addData("Servo", PushyThing.getPosition());
+            telemetry.addData("Speed", frontLeftPower);
+
 
             telemetry.addData("Player 1 Controls", "");
             telemetry.addData("Right Bumper", "Slow Mode");
