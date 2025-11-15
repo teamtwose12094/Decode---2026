@@ -178,15 +178,6 @@ public class DriverControl extends LinearOpMode {
                 telemetry.addData("Intake Motor","Stopped");
             }
 
-            //Lever
-            /*if (gamepad2.dpad_left) {
-                Lever.setPosition(0.5);
-            }
-
-            if (gamepad2.dpad_right) {
-                Lever.setPosition(0.95);
-            }
-            */
 
             //PushyThing
 
