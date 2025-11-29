@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -31,6 +33,7 @@ public class DriverControl extends LinearOpMode {
     private DcMotor intake = null;
     private Servo PushyThing = null;
     private ColorSensor colorSensor;
+    private double ticksPerRotation;
 
 
     Config config = new Config();
@@ -192,11 +195,11 @@ public class DriverControl extends LinearOpMode {
             if (direction > 0) {
                 // If direction is > 0, set the servo to one of the two end positions (1.0 or 0.0)
                 if (direction % 2 == 0) {
-                    PushyThing.setPosition(1.0); // E.g., Move one way
+                    PushyThing.setPosition(0.5); // E.g., Move one way
 
                 } else { // direction % 2 != 0
 
-                    PushyThing.setPosition(0.5); // Set the servo position to the middle value
+                    PushyThing.setPosition(1.0); // Set the servo position to the middle value
                 }
             } else {
                 // This block executes ONLY when direction is 0 (set by gamepad2.b)
