@@ -174,7 +174,7 @@ public class DriverControl extends LinearOpMode {
 
             double RightTriggerValue = gamepad2.right_trigger;
             if (RightTriggerValue > 0.1) {
-                intake.setPower(RightTriggerValue);
+                intake.setPower(100);
                 telemetry.addData("Intake Motor","Running @" + RightTriggerValue);
             } else {
                 intake.setPower(0.0);
