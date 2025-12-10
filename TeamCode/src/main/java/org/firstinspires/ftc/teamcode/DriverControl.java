@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 /*
@@ -32,6 +33,7 @@ public class DriverControl extends LinearOpMode {
     private DcMotor Launcher = null;
     private DcMotor intake = null;
     private Servo PushyThing = null;
+    private Servo Door = null;
     private ColorSensor colorSensor;
     private double ticksPerRotation;
 
@@ -167,6 +169,17 @@ public class DriverControl extends LinearOpMode {
                 telemetry.addData("Launch Motor", "Stopped");
             }
 
+           if (gamepad2.square) {
+               Launcher.setDirection(DcMotorSimple.Direction.FORWARD);
+               Launcher.setPower(0.5);
+               telemetry.addData("Launcher Direction", "Reversed");
+           }
+
+            if (gamepad2.triangle) {
+                Launcher.setDirection(DcMotorSimple.Direction.REVERSE);
+                Launcher.setPower(0.5);
+                telemetry.addData("Launcher Direction", "Forward");
+            }
 
 
 
@@ -181,7 +194,7 @@ public class DriverControl extends LinearOpMode {
                 telemetry.addData("Intake Motor","Stopped");
             }
 
-
+            /*
             //PushyThing
 
             if (gamepad2.a) {
@@ -233,11 +246,21 @@ public class DriverControl extends LinearOpMode {
             //Velocity
 
 
+            //Door
+            if (gamepad1.triangle){
+                Door.setPosition(1);
+            }
+
+            if (gamepad1.square){
+                Door.setPosition(1);
+            }
+
 
             //Telemetry
             telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
             telemetry.addData("Servo", PushyThing.getPosition());
             telemetry.addData("Speed", frontLeftPower);
+            telemetry.addData("Launcher Direction", Launcher.getDirection());
 
 
             telemetry.addData("Player 1 Controls", "");
@@ -248,6 +271,8 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Left Stick Right", "Strafe Right");
             telemetry.addData("Right Stick Left", "Turn Left");
             telemetry.addData("Right Stick Right", "Turn Right");
+            telemetry.addData("Triangle", "Open Door");
+            telemetry.addData("Square", "Close Door");
             telemetry.addData("", "");
             telemetry.addData("Player 2 Controls", "");
             telemetry.addData("Left Trigger", "Launch Artifacts");
@@ -256,6 +281,8 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("D-Pad Right", "Stop Lever");
             telemetry.addData("X Button", "Turn On Pushy Thing");
             telemetry.addData("O Button", "Turn Off Pushy Thing");
+            telemetry.addData("Triangle", "Set Launcher Direction FORWARD");
+            telemetry.addData("Square", "Set Launcher Direction REVERSE");
             telemetry.update();
         }
         }
