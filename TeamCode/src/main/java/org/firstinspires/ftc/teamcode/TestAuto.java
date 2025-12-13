@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,6 +17,8 @@ public class TestAuto extends LinearOpMode {
     private DcMotor frontRightDrive = null;
     private DcMotor Launcher = null;
     private ElapsedTime runtime = new ElapsedTime();
+    private DigitalChannel touchsensor;
+    private double ticksPerRotation;
 
     @Override
     public void runOpMode() {
@@ -46,10 +49,26 @@ public class TestAuto extends LinearOpMode {
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
 
+        ticksPerRotation = frontLeftDrive.getMotorType().getTicksPerRev();
+        ticksPerRotation = backLeftDrive.getMotorType().getTicksPerRev();
+        ticksPerRotation = frontRightDrive.getMotorType().getTicksPerRev();
+        ticksPerRotation = backRightDrive.getMotorType().getTicksPerRev();
+
+        /*public double getMotorRotations() {
+            frontLeftDrive.setPower() / ticksPerRotation;
+        }
+        public void loop(){
+
+        }
+
+        */
+
         waitForStart();
         runtime.reset(); // Resets the timer once the OpMode start
 
-        //Seqeunce Starts Here
+        //Seqeunce Starts Here (1 inch = 63 px)
+        moveForward(1,5364); // move off launch line & onto next launch line
+        turnRight(1,135);
 
 
     }

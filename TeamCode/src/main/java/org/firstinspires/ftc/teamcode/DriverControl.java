@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -13,6 +15,11 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
+
+
+
+
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -21,8 +28,10 @@ Connect to roboto  wifi
 open command prompt and type "adb connect 192.168.43.1"
  */
 
+
 @TeleOp(name="DriverControl", group="Linear OpMode")
 public class DriverControl extends LinearOpMode {
+    ProgrammingBoard5 board = new ProgrammingBoard5();
 
     // Declare motors and servos
     private ElapsedTime runtime = new ElapsedTime();
@@ -33,7 +42,8 @@ public class DriverControl extends LinearOpMode {
     private DcMotor Launcher = null;
     private DcMotor intake = null;
     private Servo PushyThing = null;
-    private Servo Door = null;
+    private Servo Carousel;
+    private Servo Door;
     private ColorSensor colorSensor;
     private double ticksPerRotation;
 
@@ -74,6 +84,8 @@ public class DriverControl extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class,"intake");
         PushyThing = hardwareMap.get(Servo.class, "PushyThing");
         ColorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
+        Door = hardwareMap.get(Servo.class, "Door");
+        Carousel = hardwareMap.get(Servo.class, "Carousel");
 
 
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -194,6 +206,26 @@ public class DriverControl extends LinearOpMode {
                 telemetry.addData("Intake Motor","Stopped");
             }
 
+            //Door
+            if (gamepad1.triangle){
+                Door.setPosition(1.0);
+            }
+
+            if (gamepad1.square){
+                Door.setPosition(0.0);
+            }
+
+
+            // Carousel
+            if (gamepad1.left_bumper){
+                Carousel.setPosition(0.50);
+
+            }
+            if (gamepad1.right_bumper){
+                Carousel.setPosition(0.45); //change to 0.55 to change direction
+            }
+
+
             /*
             //PushyThing
 
@@ -246,21 +278,15 @@ public class DriverControl extends LinearOpMode {
             //Velocity
 
 
-            //Door
-            if (gamepad1.triangle){
-                Door.setPosition(1);
-            }
 
-            if (gamepad1.square){
-                Door.setPosition(1);
-            }
 
 
             //Telemetry
             telemetry.addData("Wheel", frontLeftDrive.getCurrentPosition());
-            telemetry.addData("Servo", PushyThing.getPosition());
+            telemetry.addData("Servo", Carousel.getPosition());
             telemetry.addData("Speed", frontLeftPower);
             telemetry.addData("Launcher Direction", Launcher.getDirection());
+            telemetry.addData("Carousel", Carousel.getPosition());
 
 
             telemetry.addData("Player 1 Controls", "");
@@ -273,14 +299,14 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Right Stick Right", "Turn Right");
             telemetry.addData("Triangle", "Open Door");
             telemetry.addData("Square", "Close Door");
-            telemetry.addData("", "");
+            telemetry.addData("Left Bumper", "Stop Carousel");
+            telemetry.addData("Right Bumper", "Start Carousel");
+            telemetry.addLine();
             telemetry.addData("Player 2 Controls", "");
             telemetry.addData("Left Trigger", "Launch Artifacts");
             telemetry.addData("Right Trigger", "Intake");
             telemetry.addData("D-Pad Left", "Start Lever");
             telemetry.addData("D-Pad Right", "Stop Lever");
-            telemetry.addData("X Button", "Turn On Pushy Thing");
-            telemetry.addData("O Button", "Turn Off Pushy Thing");
             telemetry.addData("Triangle", "Set Launcher Direction FORWARD");
             telemetry.addData("Square", "Set Launcher Direction REVERSE");
             telemetry.update();
