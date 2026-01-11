@@ -68,6 +68,8 @@ public class DriverControl extends LinearOpMode {
 
     private int direction = 0;
 
+    private int DoorVarible = 0;
+
 
 
 
@@ -94,10 +96,10 @@ public class DriverControl extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
-        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
-        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
-        backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD); //Test to make sure is right direction
+        frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         Launcher.setDirection(DcMotorSimple.Direction.REVERSE); //Test to make sure is right direction
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -208,7 +210,7 @@ public class DriverControl extends LinearOpMode {
 
             //Door
             if (gamepad1.triangle){
-                Door.setPosition(1.0);
+                DoorVarible++;
             }
 
             if (gamepad1.square){
@@ -216,39 +218,53 @@ public class DriverControl extends LinearOpMode {
             }
 
 
+            if (gamepad1.square) {
+                direction++;
+            }
+
+
+            // If direction is > 0, set the servo to one of the two end positions (1.0 or 0.0)
+            if (DoorVarible % 2 == 0) {
+                Door.setPosition(0.0); // E.g., Move one way
+            }
+            if (DoorVarible % 2 != 0) {
+                Door.setPosition(1.0);
+            }
+
+
             // Carousel
             if (gamepad1.left_bumper){
-                Carousel.setPosition(0.50);
+                Carousel.setPosition(1.00);
 
             }
             if (gamepad1.right_bumper){
-                Carousel.setPosition(0.45); //change to 0.55 to change direction
+                Carousel.setPosition(0.55); //change to 0.55 to change direction
             }
 
 
-            /*
-            //PushyThing
 
-            if (gamepad2.a) {
+            /*Carousel
+
+            if (gamepad1.square) {
                 direction++;
                 }
 
-            if (gamepad2.b) {
-                direction = 0;
-            }
+            //if (g) {
+               // direction = 0;
+            //}
 
             if (direction > 0) {
                 // If direction is > 0, set the servo to one of the two end positions (1.0 or 0.0)
                 if (direction % 2 == 0) {
-                    PushyThing.setPosition(0.5); // E.g., Move one way
+                    Carousel.setPosition(0.5); // E.g., Move one way
 
                 } else { // direction % 2 != 0
 
-                    PushyThing.setPosition(1.0); // Set the servo position to the middle value
+                    Carousel.setPosition(1.0); // Set the servo position to the middle value
                 }
             } else {
                 // This block executes ONLY when direction is 0 (set by gamepad2.b)
-                PushyThing.setPosition(0.0); // E.g., Move the other way
+                Carousel.setPosition(0.0); // E.g., Move the other way
             }
 
             //Color Sensor

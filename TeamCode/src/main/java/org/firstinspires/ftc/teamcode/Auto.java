@@ -49,6 +49,9 @@ public class Auto extends LinearOpMode {
 
     }
 
+
+        public void
+
         public void stopMotors() {
             frontLeftDrive.setPower(0);
             frontRightDrive.setPower(0);
