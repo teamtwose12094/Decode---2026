@@ -209,6 +209,7 @@ public class DriverControl extends LinearOpMode {
             }
 
             //Door
+            /*
             if (gamepad1.triangle){
                 DoorVarible++;
             }
@@ -222,10 +223,11 @@ public class DriverControl extends LinearOpMode {
                 direction++;
             }
 
+                */
 
             // If direction is > 0, set the servo to one of the two end positions (1.0 or 0.0)
             if (DoorVarible % 2 == 0) {
-                Door.setPosition(0.0); // E.g., Move one way
+                Door.setPosition(0.0); // Check to make sure this opens it
             }
             if (DoorVarible % 2 != 0) {
                 Door.setPosition(1.0);
@@ -238,7 +240,7 @@ public class DriverControl extends LinearOpMode {
 
             }
             if (gamepad1.right_bumper){
-                Carousel.setPosition(0.55); //change to 0.55 to change direction
+                Carousel.setPosition(0.55);
             }
 
 

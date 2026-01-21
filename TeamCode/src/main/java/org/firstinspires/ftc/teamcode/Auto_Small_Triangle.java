@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name="TestAuto", group ="Robot")
+@Autonomous (name="Small_Triangle", group ="Robot")
 
-public class TestAuto extends LinearOpMode {
+public class Auto_Small_Triangle extends LinearOpMode {
 
     private DcMotor frontLeftDrive = null;
     private DcMotor backLeftDrive = null;
