@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name="Small_Triangle_RIGHT", group ="Robot")
+@Autonomous (name="Small_Triangle_LEFT", group ="Robot")
 
-public class Auto_Small_Triangle extends LinearOpMode {
+public class SmallTriangleLEFT extends LinearOpMode {
 
     private DcMotor frontLeftDrive = null;
     private DcMotor backLeftDrive = null;
@@ -49,7 +49,7 @@ public class Auto_Small_Triangle extends LinearOpMode {
 
 
 
-        
+
 
         ticksPerRotation = frontLeftDrive.getMotorType().getTicksPerRev();
         ticksPerRotation = backLeftDrive.getMotorType().getTicksPerRev();
@@ -66,16 +66,15 @@ public class Auto_Small_Triangle extends LinearOpMode {
 
         //CODE GOES HERE
         driveForward(76.5, 0.5);
-        turnLeft(1550,0.5);
+        turnLeft(-1550,0.5);
         driveForward(-20,0.5);
-        GateOpen(100,0.5);
-        Shoot(950);
-        fireSequence(1300,0.0, 1.0);
+        StrafeRight(10, 0.5);
+        GateOpen(-100,0.5);
+        Shoot(1000);
+        fireSequence(1600,0.0, 1.0);
         Intake(100);
         sleep(4000);
-        Shoot(0);
-        GateClose(300,0.5);
-        StrafeRight(-20,0.5);
+        StrafeRight(20,0.5);
         stop();
 
 
@@ -238,7 +237,7 @@ public class Auto_Small_Triangle extends LinearOpMode {
 
         // Open the door
         Door.setPosition(doorPos);
-         // Small pause to ensure the door is out of the way
+        // Small pause to ensure the door is out of the way
 
         // Move the Carousel servo to push/feed
         Carousel.setPosition(carouselPos);
@@ -356,10 +355,7 @@ public class Auto_Small_Triangle extends LinearOpMode {
         sleep(400);
     }
 
-    public void GateClose(int ticks, double speed) {
-        Door.setPosition(1.0);
-        sleep(100);
-    }
+
 
 }
 
